@@ -8,6 +8,7 @@
 
 import doctest
 import logging
+import argparse
 
 
 FORMAT = '{levelname:<8} - {asctime}. В модуле "{name}" ' \
@@ -77,7 +78,7 @@ class Person:
 
 class Employee(Person):
 
-    def __init__(self, last_name: str, first_name: str, patronymic: str, age: int, position: str, salary: float):
+    def __init__(self, last_name: str, first_name: str, patronymic: str, age: int, position: str, salary: float) -> object:
         super().__init__(last_name, first_name, patronymic, age)
         try:
             self.position = position.title()
@@ -117,8 +118,29 @@ class Employee(Person):
             logger.error(f'Ошибка в вызове метода __str__. передан неверный атрибут')
 
 
+def parse():  # Запуск  python task_1.py
+    # -l Ivanov -f Ivan -pt Ivanovich -a 30 -ps manager -s 50000
+    parser = argparse.ArgumentParser(description='Создаем работника', prog='Employee()',
+                                     epilog='При отсутствии значений параметров берутся параметры по умолчанию')
+    parser.add_argument('-l', '--last_name', default='None', help='Фамилия')
+    parser.add_argument('-f', '--first_name', default='None', help='Имя')
+    parser.add_argument('-pt', '--patronymic', default='None', help='Отчество')
+    parser.add_argument('-a', '--age', default=0, help='Возраст')
+    parser.add_argument('-ps', '--position', default='None', help='Должность')
+    parser.add_argument('-s', '--salary', default=0, help='Зарплата')
+    args = parser.parse_args()
+    print(args)
+    return Employee(
+        args.last_name, args.first_name,
+        args.patronymic, args.age,
+        args.position, args.salary
+    )
+
+
+
 if __name__ == '__main__':
-    emp = Employee('Ivanov', 'Ivan', 'Ivanovich', 30, 'manager', 50000)
-    emp2 = Employee(12,13,134,'sds', 24, '23')
+    # emp = Employee('Ivanov', 'Ivan', 'Ivanovich', 30, 'manager', 50000)
+    # emp2 = Employee(12,13,134,'sds', 24, '23')
     # doctest.testmod(verbose=True)
-    print(emp)
+    # print(emp)
+    parse()
